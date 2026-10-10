@@ -16,8 +16,6 @@ MATLAB code for deriving and simulating the equations of motion of a spinning to
 - **Animation:** run `RunAnimation.m`. It simulates a 6 cm toy top (its mass and inertia are computed from its shape in `topProfile.m`) with the modified Lagrange method and plays a 3D animation in slow motion. A small friction torque reduces the spin until the rim of the top touches the floor. The settings at the top of the file set the method (`'euler'` or `'quat'`), the initial spin and tilt, the friction, the playback speed, and `saveVideo = 1` to also save the animation as an MP4 file.
 - **Derivation:** `Symb_Deriv.m` derives the equations symbolically and writes the generated functions (`MassMat.m`, `Bias.m`, `Bpr_Ml.m`, ...). Running it overwrites these files.
 
-Note: the quaternion functions (`*_quat*.m`) were generated before the sign of the potential energy was corrected to $V = mgh\cos\theta$, so in these functions gravity points upward. `RunAnimation.m` flips the sign of `g` when it uses them, so that both methods simulate the same top (they then agree to about $10^{-11}$).
-
 ## Repository structure
 
 ```

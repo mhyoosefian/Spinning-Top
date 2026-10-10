@@ -30,12 +30,7 @@ switch method
     case 'euler'
         sol = ode45(@(t, z) dynEuler(t, z, friction), [0 Tmax], [angles0; w0], options);
     case 'quat'
-        % The quaternion functions were generated before the sign of the
-        % potential energy was corrected (V = +m*g*h*cos(theta)), so their
-        % gravity points up. Flipping g gives the same top as the Euler code.
-        g = -g;
         sol = ode45(@(t, z) dynQuat(t, z, friction), [0 Tmax], [rot2quat(rotZYZ(0, angles0(2), 0)); w0], options);
-        g = -g;
 end
 tFall = sol.x(end);
 t = (0:speed/fps:tFall).';

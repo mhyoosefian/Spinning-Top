@@ -178,7 +178,7 @@ E_quat = [-e1 e0 e3 -e2; -e2 -e3 e0 e1; -e3 e2 -e1 e0];
 w_quat = 2*E_quat*dq_quat;
 
 % Kinetic Energy
-V_G_quat = cross(r_G_O, w_quat);
+V_G_quat = cross(w_quat, r_G_O);
 T_quat = 0.5*m*dot(V_G_quat, V_G_quat) + 0.5*dot(w_quat,I*w_quat);
 
 % Potential Energy
@@ -189,41 +189,41 @@ L_quat = T_quat - V_quat;
 
 %Mechanical Energy and its derivative
 En_quat = T_quat + V_quat;
-% matlabFunction(En_quat, 'File', 'Energy_quat');
+matlabFunction(En_quat, 'File', 'Energy_quat');
 Endot_quat = zeros(size(En_quat));
 for i=1:length(q_quat)
     Endot_quat = Endot_quat + diff(En_quat,q_quat(i))*dq_quat(i) + diff(En_quat,dq_quat(i))*ddq_quat(i);
 end
 Endot_quat = simplify(Endot_quat);
-% matlabFunction(Endot_quat, 'File', 'Energydot_quat');
+matlabFunction(Endot_quat, 'File', 'Energydot_quat');
 
 %Power
 P_quat = dot(Mz, w_quat);
-% matlabFunction(P_quat, 'File', 'Power_quat');
+matlabFunction(P_quat, 'File', 'Power_quat');
 
 % Matrices Calculation
 pl_pdq_quat = jacobian(L_quat,dq_quat).';
 M_quat = jacobian(pl_pdq_quat,dq_quat);
 M_quat = simplify(M_quat);
-% matlabFunction(M_quat, 'File', 'MassMat_quat');
+matlabFunction(M_quat, 'File', 'MassMat_quat');
 
 pl_pq_quat = jacobian(L_quat,q_quat).';
 B_quat = diff(pl_pdq_quat,t) + jacobian(pl_pdq_quat,q_quat)*dq_quat - pl_pq_quat;
 B_quat = simplify(B_quat);
-% matlabFunction(B_quat, 'File', 'Bias_quat');
+matlabFunction(B_quat, 'File', 'Bias_quat');
 
 Q1_quat = diff(w_quat,de0).'*Mz;
 Q2_quat = diff(w_quat,de1).'*Mz;
 Q3_quat = diff(w_quat,de2).'*Mz;
 Q4_quat = diff(w_quat,de3).'*Mz;
 Q_quat = [Q1_quat; Q2_quat; Q3_quat; Q4_quat];
-% matlabFunction(Q_quat, 'File', 'GenForc_quat');
+matlabFunction(Q_quat, 'File', 'GenForc_quat');
 
 % Constraint
 a_quat = q_quat.';
 adot_quat = dq_quat.';
-% matlabFunction(a_quat, 'File', 'ConsJacob_quat');
-% matlabFunction(adot_quat, 'File', 'ConsJacobdot_quat');
+matlabFunction(a_quat, 'File', 'ConsJacob_quat');
+matlabFunction(adot_quat, 'File', 'ConsJacobdot_quat');
 
 % Quasi velocities
 U_quat = sym('U_quat',[3,1]);
@@ -257,33 +257,33 @@ Mprime_ML_quat = simplify(Mprime_ML_quat);
 Bprime_ML_quat = simplify(Bprime_ML_quat);
 Qprime_ML_quat = simplify(Qprime_ML_quat);
 
-% matlabFunction(Mprime_ML_quat, 'File', 'Mpr_Ml_quat');
-% matlabFunction(Bprime_ML_quat, 'File', 'Bpr_Ml_quat');
-% matlabFunction(Qprime_ML_quat, 'File', 'Qpr_Ml_quat');
-% matlabFunction(W_quat, 'File', 'W_Ml_quat');
-% matlabFunction(X_quat, 'File', 'X_Ml_quat');
-% matlabFunction(U_quat, 'File', 'u_Ml_quat');
-% matlabFunction(Wdot_quat, 'File', 'Wdot_Ml_quat');
-% matlabFunction(Xdot_quat, 'File', 'Xdot_Ml_quat');
+matlabFunction(Mprime_ML_quat, 'File', 'Mpr_Ml_quat');
+matlabFunction(Bprime_ML_quat, 'File', 'Bpr_Ml_quat');
+matlabFunction(Qprime_ML_quat, 'File', 'Qpr_Ml_quat');
+matlabFunction(W_quat, 'File', 'W_Ml_quat');
+matlabFunction(X_quat, 'File', 'X_Ml_quat');
+matlabFunction(U_quat, 'File', 'u_Ml_quat');
+matlabFunction(Wdot_quat, 'File', 'Wdot_Ml_quat');
+matlabFunction(Xdot_quat, 'File', 'Xdot_Ml_quat');
 
 
 %Constructing ddq in terms of u
-% Wdot_quat_itu = subs(Wdot_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
-% ddq_quat_itu = Wdot_quat_itu*u_quat + W_quat*du_quat + Xdot_quat;
-% Bprime_ML_quat_itu = subs(Bprime_ML_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
-% matlabFunction(Bprime_ML_quat_itu, 'File', 'Bpr_Ml_quat_itu');
+Wdot_quat_itu = subs(Wdot_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
+ddq_quat_itu = Wdot_quat_itu*u_quat + W_quat*du_quat + Xdot_quat;
+Bprime_ML_quat_itu = subs(Bprime_ML_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
+matlabFunction(Bprime_ML_quat_itu, 'File', 'Bpr_Ml_quat_itu');
 
 % Constructing Energy and Power in terms of u
-% En_quat_itu = subs(En_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
-% Endot_quat_itu = subs(Endot_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
-% Endot_quat_itu = subs(Endot_quat_itu, {ddq_quat(1),ddq_quat(2),ddq_quat(3),ddq_quat(4)}, {ddq_quat_itu(1),ddq_quat_itu(2),ddq_quat_itu(3),ddq_quat_itu(4)});
-% P_quat_itu = subs(P_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
-% En_quat_itu = simplify(En_quat_itu);
-% Endot_quat_itu = simplify(Endot_quat_itu);
-% P_quat_itu = simplify(P_quat_itu);
-% matlabFunction(En_quat_itu, 'File', 'Energy_quat_itu');
-% matlabFunction(Endot_quat_itu, 'File', 'Energydot_quat_itu');
-% matlabFunction(P_quat_itu, 'File', 'Power_quat_itu');
+En_quat_itu = subs(En_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
+Endot_quat_itu = subs(Endot_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
+Endot_quat_itu = subs(Endot_quat_itu, {ddq_quat(1),ddq_quat(2),ddq_quat(3),ddq_quat(4)}, {ddq_quat_itu(1),ddq_quat_itu(2),ddq_quat_itu(3),ddq_quat_itu(4)});
+P_quat_itu = subs(P_quat, {dq_quat(1),dq_quat(2),dq_quat(3),dq_quat(4)}, {dq_quat_itu(1),dq_quat_itu(2),dq_quat_itu(3),dq_quat_itu(4)});
+En_quat_itu = simplify(En_quat_itu);
+Endot_quat_itu = simplify(Endot_quat_itu);
+P_quat_itu = simplify(P_quat_itu);
+matlabFunction(En_quat_itu, 'File', 'Energy_quat_itu');
+matlabFunction(Endot_quat_itu, 'File', 'Energydot_quat_itu');
+matlabFunction(P_quat_itu, 'File', 'Power_quat_itu');
 
 
 
